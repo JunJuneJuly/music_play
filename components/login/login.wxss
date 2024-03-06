@@ -1,0 +1,11 @@
+.content{
+  width: 100%;
+  height: 300rpx;
+}
+.login{
+  font-size: 32rpx;
+  height: 80rpx;
+  background-color: #d43c33;
+  color: #fff;
+  margin: 110rpx;
+}

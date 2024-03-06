@@ -1,0 +1,21 @@
+<view class="container">
+  <view class="time">{{showTime.currentTime}}</view>
+  <view class="controls">
+    <movable-area class="movable-area">
+      <movable-view class="movable-view" 
+        direction="horizontal"
+        damping="1000"
+        x="{{movableDis}}"
+        bindchange="bindChange"
+        bindtouchend="bindTouchEnd">
+        
+      </movable-view>
+    </movable-area>
+    <progress 
+      stroke-width="4" 
+      backgroundColor="#969696" 
+      activeColor="#fff"
+      percent="{{progress}}"></progress>
+  </view>
+  <view class="time">{{showTime.totalTime}}</view>
+</view>

@@ -9,7 +9,6 @@ Page({
     modalShow: false
   },
   onPublish() {
-    // 20221128小程序用户头像昵称获取规则调整
     // 判断本地存储中是否有用户信息
     // 用户信息在本地存储，key为openid + '-userinfo'
     const {
@@ -18,10 +17,12 @@ Page({
     wx.getStorage({
       key:openid + '-userinfo',
       success(res){
-        console.log(res)
+        const { nickname, avatarFileId } = res.data
+        wx.navigateTo({
+          url: `../blog-edit/blog-edit?nickname=${nickname}&avatarUrl=${avatarFileId}`,
+        })
       },
       fail(res){
-        console.log(res)
         // 如果不存在用户信息，就跳转到用户信息配置页面
         wx.showToast({
           title: 'loading',

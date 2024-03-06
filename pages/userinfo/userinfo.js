@@ -1,4 +1,5 @@
 // pages/userinfo/userinfo.js
+const app = getApp()
 Page({
 
   /**
@@ -33,11 +34,35 @@ Page({
           avatarFileId:res.fileID
         })
       },
+      fail:err => {
+        console.error(err);
+      }
     })
   },
   //上传表单
-  formSubmit() {
-    console.log('点击')
+  formSubmit(e) {
+    const { nickname } = e.detail.value;
+    const { openid } = app.globalData;
+    wx.setStorage({
+      key: openid + '-userinfo',
+      data:{
+        nickname,
+        avatarFileId: this.data.avatarFileId
+      },
+      success(){
+        wx.showToast({
+          icon:'success',
+          title: '保存成功',
+        })
+        setTimeout(wx.navigateBack,1500)
+      },
+      fail(){
+        wx.showToast({
+          icon:'error',
+          title: '保存失败',
+        })
+      }
+    }) 
   },
   /**
    * 生命周期函数--监听页面加载

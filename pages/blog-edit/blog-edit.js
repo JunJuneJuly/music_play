@@ -15,18 +15,28 @@ Page({
     images: [], //存放图片容器
     selectPhoto: true, //是否显示”上传图片“按钮
   },
+  //预览事件
+  previewImage(e) {
+    const {
+      src
+    } = e.target.dataset
+    wx.previewImage({
+      current: src, // 图片的地址url
+      urls: this.data.images // 预览的地址url
+    })
+  },
   //发布事件
   send() {
     if (content.trim() === '') {
       wx.showModal({
         title: '输入内容不能为空',
-        content:''
+        content: ''
       })
       return
     }
     wx.showLoading({
-      title:'发布中',
-      mask:true
+      title: '发布中',
+      mask: true
     })
     let promiseArr = [];
     let filesID = []
@@ -42,7 +52,7 @@ Page({
             filesID = filesID.concat(res.fileID)
             resolve()
           },
-          fail:(err)=>{
+          fail: (err) => {
             console.log(err)
             reject()
           }
@@ -50,23 +60,26 @@ Page({
       })
       promiseArr.push(p)
     }
-    Promise.all(promiseArr).then((res)=>{
+    Promise.all(promiseArr).then((res) => {
       db.collection('blog').add({
-        data:{
+        data: {
           ...userinfo,
           content,
-          img:filesID,
-          createTime:db.serverDate() //服务端时间
+          img: filesID,
+          createTime: db.serverDate() //服务端时间
         }
-      }).then((res)=>{
+      }).then((res) => {
         content = '';
         wx.showToast({
           title: '发布成功',
         })
         wx.navigateBack();
         //刷新
+        const pages = getCurrentPages()
+        let currentPage = pages[pages.length - 2]
+        currentPage.onPullDownRefresh()
       })
-    }).catch(()=>{
+    }).catch(() => {
       wx.hideLoading()
       wx.showToast({
         title: '发布失败',

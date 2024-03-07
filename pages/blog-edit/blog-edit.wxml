@@ -15,6 +15,8 @@
           class="image" 
           src="{{item}}" 
           mode="aspectFill" 
+          data-src="{{item}}"
+          bind:tap="previewImage"
           />
         <i class="iconfont icon-shanchu" data-index="{{index}}"            bind:tap="onDelImage"></i>
       </view>

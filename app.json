@@ -6,7 +6,8 @@
     "pages/musiclist/musiclist",
     "pages/player/player",
     "pages/blog-edit/blog-edit",
-    "pages/userinfo/userinfo"
+    "pages/userinfo/userinfo",
+    "pages/blog-comment/blog-comment"
   ],
   "tabBar": {
     "list": [

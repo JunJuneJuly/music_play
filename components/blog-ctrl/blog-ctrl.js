@@ -1,12 +1,14 @@
 // components/blog-ctrl/blog-ctrl.js
 const app = getApp()
+const db = wx.cloud.database()
 Component({
 
   /**
    * 组件的属性列表
    */
   properties: {
-
+    blogId: String,
+    blog: Object
   },
   externalClasses: ['icon-fenxiang', 'iconfont', 'icon-pinglun'],
   /**
@@ -14,7 +16,7 @@ Component({
    */
   data: {
     showBottomModal: false,
-    content:'',//文本框内容
+    content: '', //文本框内容
   },
 
   /**
@@ -31,9 +33,9 @@ Component({
       } = app.globalData
       wx.getStorage({
         key: openid + '-userinfo',
-        success:(res) => {
+        success: (res) => {
           this.setData({
-            showBottomModal:true
+            showBottomModal: true
           })
 
         },
@@ -51,5 +53,50 @@ Component({
         }
       })
     },
+    //输入
+    onInput(e) {
+      this.setData({
+        content: e.detail.value
+      })
+    },
+    //点击发送
+    onSend(e) {
+      let content = e.detail.value.content
+      if (content.trim() === '') {
+        wx.showModal({
+          title: '输入内容为空',
+          content: '',
+        })
+        return
+      }
+      const {
+        openid
+      } = app.globalData
+      let userinfo = wx.getStorageSync(openid + '-userinfo')
+      wx.showLoading({
+        title: '评论中',
+        mask: true
+      })
+      db.collection('blog-comment').add({
+        data: {
+          ...userinfo,
+          content,
+          createTime: db.serverDate(),
+          blogId: this.properties.blogId
+        }
+      }).then(res => {
+        wx.hideLoading()
+        wx.showToast({
+          title: '评论成功'
+        })
+        this.setData({
+          showBottomModal: false,
+          content: ''
+        })
+        //刷新页面的评论列表
+        this.triggerEvent('refresh')
+      })
+    }
+
   }
 })

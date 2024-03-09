@@ -20,11 +20,29 @@ Page({
     //父组件触发子组件的update事件
     this.selectComponent('.lyric').update(event.detail.currentTime)
   },
-  onChangeLyricShow() {~
+  onChangeLyricShow() {
+    ~
     this.setData({
       isLyricShow: !this.data.isLyricShow
     })
   },
+  //保存播放历史
+  savePlayHistory() {
+    let music = musiclist[nowPlayingIndex]
+    let historyList = wx.getStorageSync(app.globalData.openid)
+    let flag = false
+    for (let i = 0; i < historyList.length; i++) {
+      if (music.id == historyList[i].id) {
+        flag = true;
+        break
+      }
+    }
+    if (!flag) {
+      historyList.unshift(music)
+      wx.setStorageSync(app.globalData.openid, historyList)
+    }
+  },
+  //播放音乐
   _loadMusicDetail(musicId) {
     if (musicId == app.getPlayingMusicId()) {
       this.setData({
@@ -67,6 +85,8 @@ Page({
         backgroundAudioManager.coverImgUrl = music.al.picUrl;
         backgroundAudioManager.singer = music.ar[0].name;
         backgroundAudioManager.epname = music.al.name
+        //保存历史数据
+        this.savePlayHistory()
       }
       this.setData({
         isPlaying: true

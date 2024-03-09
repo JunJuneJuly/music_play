@@ -135,7 +135,10 @@ Page({
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage() {
-
+  onShareAppMessage(e) {
+    return{
+      title:e.target.dataset.blog.content,
+      path:`/pages/blog-comment/blog-comment?blogid=${e.target.dataset.blogid}`
+    }
   }
 })
